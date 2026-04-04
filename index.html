@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cold Email Sequence Builder</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0a0a0a;
+      color: #e8e8e8;
+      min-height: 100vh;
+    }
+
+    header {
+      border-bottom: 1px solid #1f1f1f;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    header .logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    header span {
+      font-size: 12px;
+      background: #1f1f1f;
+      color: #888;
+      padding: 3px 8px;
+      border-radius: 20px;
+      margin-left: 4px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .hero h2 {
+      font-size: 36px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero h2 span {
+      background: linear-gradient(135deg, #6366f1, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: #888;
+      font-size: 16px;
+    }
+
+    .card {
+      background: #111;
+      border: 1px solid #1f1f1f;
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input, textarea, select {
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: #e8e8e8;
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #6366f1;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #444;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    select option {
+      background: #111;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn:hover { opacity: 0.9; }
+    .btn:active { transform: scale(0.99); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 48px;
+      color: #888;
+    }
+
+    .loading.active { display: block; }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #1f1f1f;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .results { display: none; }
+    .results.active { display: block; }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .results-header h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .btn-reset {
+      background: #1f1f1f;
+      color: #aaa;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-reset:hover { background: #2a2a2a; }
+
+    .email-card {
+      background: #111;
+      border: 1px solid #1f1f1f;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .email-card:hover { border-color: #2a2a2a; }
+
+    .email-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .email-num {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #6366f1;
+      background: #1a1a2e;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .btn-copy {
+      background: #1f1f1f;
+      color: #888;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-copy:hover { background: #2a2a2a; color: #e8e8e8; }
+    .btn-copy.copied { background: #14532d; color: #4ade80; border-color: #166534; }
+
+    .subject-line {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .subject-line span {
+      color: #e8e8e8;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .email-body {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #bbb;
+      white-space: pre-wrap;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #1f1f1f;
+    }
+
+    .error {
+      background: #1c0a0a;
+      border: 1px solid #7f1d1d;
+      border-radius: 10px;
+      padding: 16px;
+      color: #fca5a5;
+      font-size: 14px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .error.active { display: block; }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .hero h2 { font-size: 26px; }
+      header { padding: 16px 20px; }
+      .container { padding: 32px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">✉</div>
+  <h1>Cold Email Builder <span>AI-powered</span></h1>
+</header>
+
+<div class="container">
+  <div class="hero">
+    <h2>Generate a <span>5-email cold sequence</span><br>in under 30 seconds</h2>
+    <p>Fill in your details. Get a proven outreach sequence ready to send.</p>
+  </div>
+
+  <div class="card" id="form-card">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="senderName" placeholder="Alex Johnson" />
+      </div>
+      <div class="form-group">
+        <label>Your Company (optional)</label>
+        <input type="text" id="senderCompany" placeholder="Acme Agency" />
+      </div>
+      <div class="form-group full">
+        <label>Target Audience</label>
+        <input type="text" id="targetAudience" placeholder="e.g. ecommerce store owners doing $10k-$100k/month" />
+      </div>
+      <div class="form-group full">
+        <label>Your Offer</label>
+        <textarea id="offer" placeholder="e.g. We build done-for-you email flows that recover abandoned carts and increase revenue by 20-40% in 60 days, guaranteed."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Tone</label>
+        <select id="tone">
+          <option value="professional but conversational">Professional but conversational</option>
+          <option value="casual and direct">Casual and direct</option>
+          <option value="formal and polished">Formal and polished</option>
+          <option value="bold and confident">Bold and confident</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn" id="generateBtn" onclick="generate()">Generate My Email Sequence</button>
+    <div class="error" id="error"></div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Writing your sequence...</p>
+  </div>
+
+  <div class="results" id="results">
+    <div class="results-header">
+      <h3>Your 5-Email Sequence</h3>
+      <button class="btn-reset" onclick="reset()">Start over</button>
+    </div>
+    <div id="emailList"></div>
+  </div>
+</div>
+
+<script>
+  async function generate() {
+    const senderName = document.getElementById("senderName").value.trim();
+    const senderCompany = document.getElementById("senderCompany").value.trim();
+    const targetAudience = document.getElementById("targetAudience").value.trim();
+    const offer = document.getElementById("offer").value.trim();
+    const tone = document.getElementById("tone").value;
+
+    const errorEl = document.getElementById("error");
+    errorEl.classList.remove("active");
+
+    if (!senderName || !targetAudience || !offer) {
+      errorEl.textContent = "Please fill in your name, target audience, and offer.";
+      errorEl.classList.add("active");
+      return;
+    }
+
+    const btn = document.getElementById("generateBtn");
+    btn.disabled = true;
+
+    document.getElementById("form-card").style.display = "none";
+    document.getElementById("loading").classList.add("active");
+    document.getElementById("results").classList.remove("active");
+
+    try {
+      const res = await fetch("/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ senderName, senderCompany, targetAudience, offer, tone }),
+      });
+
+      const data = await res.json();
+
+      if (data.error) throw new Error(data.error);
+
+      renderResults(data.sequence);
+    } catch (err) {
+      document.getElementById("form-card").style.display = "block";
+      errorEl.textContent = err.message || "Something went wrong. Try again.";
+      errorEl.classList.add("active");
+    } finally {
+      document.getElementById("loading").classList.remove("active");
+      btn.disabled = false;
+    }
+  }
+
+  function renderResults(sequence) {
+    const list = document.getElementById("emailList");
+    list.innerHTML = "";
+
+    const labels = ["", "Hook", "Social Proof", "Handle Objection", "Case Study", "Breakup"];
+
+    sequence.forEach((email) => {
+      const card = document.createElement("div");
+      card.className = "email-card";
+      card.innerHTML = `
+        <div class="email-header">
+          <span class="email-num">Email ${email.number} — ${labels[email.number]}</span>
+          <button class="btn-copy" onclick="copyEmail(this, ${email.number})">Copy</button>
+        </div>
+        <div class="subject-line">Subject: <span>${escapeHtml(email.subject)}</span></div>
+        <div class="email-body" id="body-${email.number}">${escapeHtml(email.body)}</div>
+      `;
+      list.appendChild(card);
+    });
+
+    window._sequence = sequence;
+    document.getElementById("results").classList.add("active");
+  }
+
+  function copyEmail(btn, num) {
+    const email = window._sequence.find(e => e.number === num);
+    const text = `Subject: ${email.subject}\n\n${email.body}`;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = "Copied!";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.textContent = "Copy";
+        btn.classList.remove("copied");
+      }, 2000);
+    });
+  }
+
+  function reset() {
+    document.getElementById("results").classList.remove("active");
+    document.getElementById("form-card").style.display = "block";
+    document.getElementById("error").classList.remove("active");
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+</script>
+
+</body>
+</html>
