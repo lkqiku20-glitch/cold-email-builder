@@ -11,26 +11,12 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const ACCESS_PASSWORD = process.env.ACCESS_PASSWORD || "coldcraft2024";
 
 app.get("/", (req, res) => {
   res.sendFile(join(__dirname, "index.html"));
 });
 
-app.post("/auth", (req, res) => {
-  const { password } = req.body;
-  if (password === ACCESS_PASSWORD) {
-    res.json({ success: true });
-  } else {
-    res.status(401).json({ error: "Incorrect password." });
-  }
-});
-
 app.post("/generate", async (req, res) => {
-  const { password } = req.body;
-  if (password !== ACCESS_PASSWORD) {
-    return res.status(401).json({ error: "Unauthorized." });
-  }
   const { targetAudience, offer, senderName, senderCompany, tone } = req.body;
 
   if (!targetAudience || !offer || !senderName) {
