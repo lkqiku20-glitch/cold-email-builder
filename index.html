@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cold Email Sequence Builder</title>
+  <title>Cold Email Builder — 30-Day Outreach System</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -49,7 +49,7 @@
     }
 
     .container {
-      max-width: 860px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 48px 24px;
     }
@@ -60,11 +60,11 @@
     }
 
     .hero h2 {
-      font-size: 36px;
+      font-size: 38px;
       font-weight: 700;
       color: #fff;
       line-height: 1.2;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .hero h2 span {
@@ -76,6 +76,28 @@
     .hero p {
       color: #888;
       font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .hero-pills {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .hero-pill {
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    .hero-pill strong {
+      color: #6366f1;
     }
 
     .card {
@@ -84,6 +106,15 @@
       border-radius: 16px;
       padding: 32px;
       margin-bottom: 32px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #1f1f1f;
     }
 
     .form-grid {
@@ -110,7 +141,20 @@
       letter-spacing: 0.05em;
     }
 
-    input, textarea, select {
+    label .req {
+      color: #6366f1;
+      margin-left: 2px;
+    }
+
+    label .hint {
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+      color: #555;
+      margin-left: 6px;
+    }
+
+    input, textarea {
       background: #0a0a0a;
       border: 1px solid #2a2a2a;
       border-radius: 10px;
@@ -122,7 +166,7 @@
       outline: none;
     }
 
-    input:focus, textarea:focus, select:focus {
+    input:focus, textarea:focus {
       border-color: #6366f1;
     }
 
@@ -135,13 +179,9 @@
       min-height: 90px;
     }
 
-    select option {
-      background: #111;
-    }
-
     .btn {
       width: 100%;
-      padding: 14px;
+      padding: 15px;
       background: linear-gradient(135deg, #6366f1, #8b5cf6);
       color: #fff;
       border: none;
@@ -160,24 +200,28 @@
     .loading {
       display: none;
       text-align: center;
-      padding: 48px;
+      padding: 64px 48px;
       color: #888;
     }
 
     .loading.active { display: block; }
 
     .spinner {
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       border: 3px solid #1f1f1f;
       border-top-color: #6366f1;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      margin: 0 auto 16px;
+      margin: 0 auto 20px;
     }
+
+    .loading p { font-size: 15px; margin-bottom: 6px; }
+    .loading small { font-size: 13px; color: #555; }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* ── Results ── */
     .results { display: none; }
     .results.active { display: block; }
 
@@ -185,12 +229,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
     .results-header h3 {
-      font-size: 20px;
-      font-weight: 600;
+      font-size: 22px;
+      font-weight: 700;
       color: #fff;
     }
 
@@ -199,7 +245,7 @@
       color: #aaa;
       border: 1px solid #2a2a2a;
       border-radius: 8px;
-      padding: 8px 16px;
+      padding: 9px 18px;
       font-size: 13px;
       cursor: pointer;
       transition: background 0.2s;
@@ -207,7 +253,45 @@
 
     .btn-reset:hover { background: #2a2a2a; }
 
-    .email-card {
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid #1f1f1f;
+      margin-bottom: 28px;
+      overflow-x: auto;
+      padding-bottom: 0;
+      scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 16px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: color 0.2s, border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .tab-btn:hover { color: #aaa; }
+
+    .tab-btn.active {
+      color: #6366f1;
+      border-bottom-color: #6366f1;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Generic cards ── */
+    .out-card {
       background: #111;
       border: 1px solid #1f1f1f;
       border-radius: 12px;
@@ -216,16 +300,17 @@
       transition: border-color 0.2s;
     }
 
-    .email-card:hover { border-color: #2a2a2a; }
+    .out-card:hover { border-color: #2a2a2a; }
 
-    .email-header {
+    .card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
+      gap: 12px;
     }
 
-    .email-num {
+    .badge {
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
@@ -234,7 +319,12 @@
       background: #1a1a2e;
       padding: 4px 10px;
       border-radius: 20px;
+      white-space: nowrap;
     }
+
+    .badge.green { color: #4ade80; background: #0d2218; }
+    .badge.blue  { color: #60a5fa; background: #0d1a2e; }
+    .badge.amber { color: #fbbf24; background: #1f1800; }
 
     .btn-copy {
       background: #1f1f1f;
@@ -245,34 +335,174 @@
       font-size: 12px;
       cursor: pointer;
       transition: all 0.2s;
+      flex-shrink: 0;
+      font-family: inherit;
     }
 
     .btn-copy:hover { background: #2a2a2a; color: #e8e8e8; }
     .btn-copy.copied { background: #14532d; color: #4ade80; border-color: #166534; }
 
-    .subject-line {
-      font-size: 13px;
-      color: #888;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-
-    .subject-line span {
-      color: #e8e8e8;
+    .field-label {
+      font-size: 11px;
       font-weight: 600;
-      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #555;
+      margin-bottom: 4px;
     }
 
-    .email-body {
+    .field-value {
       font-size: 14px;
       line-height: 1.7;
-      color: #bbb;
+      color: #ccc;
       white-space: pre-wrap;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid #1f1f1f;
+      margin-bottom: 14px;
     }
 
+    .field-value.subject-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #e8e8e8;
+      margin-bottom: 6px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #1f1f1f;
+      margin: 12px 0;
+    }
+
+    /* ── Subject lines ── */
+    .subject-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: #2a2a2a;
+      min-width: 32px;
+    }
+
+    .subject-content { flex: 1; }
+
+    .subject-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .tip-box {
+      background: #0d0d1a;
+      border: 1px solid #1e1e3a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #7c7cbb;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* ── Calendar ── */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    .cal-card {
+      background: #111;
+      border: 1px solid #1f1f1f;
+      border-radius: 10px;
+      padding: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .cal-card:hover { border-color: #2a2a2a; }
+
+    .cal-day {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    .cal-channel {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+
+    .channel-email    { background: #1a1a2e; color: #6366f1; }
+    .channel-linkedin { background: #0d1a2e; color: #60a5fa; }
+    .channel-twitter  { background: #001a14; color: #34d399; }
+    .channel-research { background: #1a1200; color: #fbbf24; }
+    .channel-rest     { background: #1a1a1a; color: #666; }
+
+    .cal-action {
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+
+    .cal-notes {
+      font-size: 12px;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    /* ── Objections ── */
+    .objection-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e8e8e8;
+      margin-bottom: 14px;
+      padding-left: 12px;
+      border-left: 3px solid #6366f1;
+    }
+
+    /* ── Strategy ── */
+    .strategy-body {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #bbb;
+      white-space: pre-wrap;
+    }
+
+    .tips-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .tips-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #bbb;
+    }
+
+    .tips-list li .tip-num {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    /* ── Error ── */
     .error {
       background: #1c0a0a;
       border: 1px solid #7f1d1d;
@@ -286,17 +516,17 @@
 
     .error.active { display: block; }
 
-    @media (max-width: 600px) {
+    @media (max-width: 640px) {
       .form-grid { grid-template-columns: 1fr; }
       .hero h2 { font-size: 26px; }
       header { padding: 16px 20px; }
       .container { padding: 32px 16px; }
+      .calendar-grid { grid-template-columns: 1fr; }
+      .tab-btn { padding: 10px 12px; font-size: 12px; }
     }
   </style>
 </head>
 <body>
-
-<div id="main-app">
 
 <header>
   <div class="logo">✉</div>
@@ -304,80 +534,164 @@
 </header>
 
 <div class="container">
+
   <div class="hero">
-    <h2>Generate a <span>5-email cold sequence</span><br>in under 30 seconds</h2>
-    <p>Fill in your details. Get a proven outreach sequence ready to send.</p>
+    <h2>A complete <span>30-day outreach system</span><br>in 60 seconds</h2>
+    <p>Fill in your details. Get a full multi-channel outreach system ready to deploy.</p>
+    <div class="hero-pills">
+      <div class="hero-pill"><strong>5</strong> Email sequence</div>
+      <div class="hero-pill"><strong>3</strong> LinkedIn messages</div>
+      <div class="hero-pill"><strong>3</strong> Twitter/X DMs</div>
+      <div class="hero-pill"><strong>10</strong> Subject line variants</div>
+      <div class="hero-pill"><strong>30-day</strong> outreach calendar</div>
+      <div class="hero-pill"><strong>5</strong> Objection responses</div>
+    </div>
   </div>
 
   <div class="card" id="form-card">
+    <div class="card-title">Tell us about your outreach</div>
     <div class="form-grid">
+
       <div class="form-group">
-        <label>Your Name</label>
+        <label>Your Name <span class="req">*</span></label>
         <input type="text" id="senderName" placeholder="Alex Johnson" />
       </div>
+
       <div class="form-group">
-        <label>Your Company (optional)</label>
-        <input type="text" id="senderCompany" placeholder="Acme Agency" />
+        <label>Your Role <span class="hint">optional</span></label>
+        <input type="text" id="senderRole" placeholder="e.g. Founder, Sales Lead, Consultant" />
       </div>
-      <div class="form-group full">
-        <label>Target Audience</label>
-        <input type="text" id="targetAudience" placeholder="e.g. ecommerce store owners doing $10k-$100k/month" />
+
+      <div class="form-group">
+        <label>Who You're Reaching Out To <span class="hint">optional</span></label>
+        <input type="text" id="targetRole" placeholder="e.g. E-commerce CMOs, SaaS Founders" />
       </div>
+
+      <div class="form-group">
+        <label>Their Industry <span class="hint">optional</span></label>
+        <input type="text" id="targetIndustry" placeholder="e.g. DTC e-commerce, B2B SaaS" />
+      </div>
+
       <div class="form-group full">
-        <label>Your Offer</label>
+        <label>What You're Offering <span class="req">*</span></label>
         <textarea id="offer" placeholder="e.g. We build done-for-you email flows that recover abandoned carts and increase revenue by 20-40% in 60 days, guaranteed."></textarea>
       </div>
+
       <div class="form-group full">
-        <label>Tone</label>
-        <select id="tone">
-          <option value="professional but conversational">Professional but conversational</option>
-          <option value="casual and direct">Casual and direct</option>
-          <option value="formal and polished">Formal and polished</option>
-          <option value="bold and confident">Bold and confident</option>
-        </select>
+        <label>Pain Point You Solve <span class="hint">optional</span></label>
+        <textarea id="painPoint" placeholder="e.g. Most e-commerce brands lose 70% of their abandoned carts because they have no automated recovery system in place." style="min-height:70px;"></textarea>
       </div>
+
+      <div class="form-group full">
+        <label>Desired CTA <span class="hint">optional</span></label>
+        <input type="text" id="cta" placeholder="e.g. Book a free 15-min call, Reply with a yes, Sign up for a trial" />
+      </div>
+
     </div>
 
-    <button class="btn" id="generateBtn" onclick="generate()">Generate My Email Sequence</button>
+    <button class="btn" id="generateBtn" onclick="generate()">Generate My 30-Day Outreach System</button>
     <div class="error" id="error"></div>
   </div>
 
   <div class="loading" id="loading">
     <div class="spinner"></div>
-    <p>Writing your sequence...</p>
+    <p>Building your complete outreach system...</p>
+    <small>Generating emails, LinkedIn messages, DMs, subject lines, and more</small>
   </div>
 
   <div class="results" id="results">
     <div class="results-header">
-      <h3>Your 5-Email Sequence</h3>
+      <h3>Your 30-Day Outreach System</h3>
       <button class="btn-reset" onclick="reset()">Start over</button>
     </div>
-    <div id="emailList"></div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" onclick="switchTab('emails', this)">Email Sequence</button>
+      <button class="tab-btn" onclick="switchTab('linkedin', this)">LinkedIn</button>
+      <button class="tab-btn" onclick="switchTab('twitter', this)">Twitter/X DMs</button>
+      <button class="tab-btn" onclick="switchTab('subjects', this)">Subject Lines</button>
+      <button class="tab-btn" onclick="switchTab('calendar', this)">30-Day Calendar</button>
+      <button class="tab-btn" onclick="switchTab('objections', this)">Objections</button>
+      <button class="tab-btn" onclick="switchTab('strategy', this)">Strategy</button>
+    </div>
+
+    <!-- Tab 1: Email Sequence -->
+    <div class="tab-panel active" id="tab-emails">
+      <div id="emailList"></div>
+    </div>
+
+    <!-- Tab 2: LinkedIn -->
+    <div class="tab-panel" id="tab-linkedin">
+      <div id="linkedinList"></div>
+    </div>
+
+    <!-- Tab 3: Twitter/X DMs -->
+    <div class="tab-panel" id="tab-twitter">
+      <div id="twitterList"></div>
+    </div>
+
+    <!-- Tab 4: Subject Lines -->
+    <div class="tab-panel" id="tab-subjects">
+      <div id="subjectList"></div>
+    </div>
+
+    <!-- Tab 5: 30-Day Calendar -->
+    <div class="tab-panel" id="tab-calendar">
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <!-- Tab 6: Objections -->
+    <div class="tab-panel" id="tab-objections">
+      <div id="objectionList"></div>
+    </div>
+
+    <!-- Tab 7: Strategy -->
+    <div class="tab-panel" id="tab-strategy">
+      <div id="strategyPanel"></div>
+    </div>
+
   </div>
 </div>
 
-</div> <!-- end #main-app -->
-
 <script>
+  let _data = null;
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function switchTab(name, btn) {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("tab-" + name).classList.add("active");
+  }
+
   async function generate() {
-    const senderName = document.getElementById("senderName").value.trim();
-    const senderCompany = document.getElementById("senderCompany").value.trim();
-    const targetAudience = document.getElementById("targetAudience").value.trim();
-    const offer = document.getElementById("offer").value.trim();
-    const tone = document.getElementById("tone").value;
+    const senderName    = document.getElementById("senderName").value.trim();
+    const senderRole    = document.getElementById("senderRole").value.trim();
+    const targetRole    = document.getElementById("targetRole").value.trim();
+    const targetIndustry= document.getElementById("targetIndustry").value.trim();
+    const offer         = document.getElementById("offer").value.trim();
+    const painPoint     = document.getElementById("painPoint").value.trim();
+    const cta           = document.getElementById("cta").value.trim();
 
     const errorEl = document.getElementById("error");
     errorEl.classList.remove("active");
 
-    if (!senderName || !targetAudience || !offer) {
-      errorEl.textContent = "Please fill in your name, target audience, and offer.";
+    if (!senderName || !offer) {
+      errorEl.textContent = "Please fill in your name and what you're offering — those are required.";
       errorEl.classList.add("active");
       return;
     }
 
     const btn = document.getElementById("generateBtn");
     btn.disabled = true;
-
     document.getElementById("form-card").style.display = "none";
     document.getElementById("loading").classList.add("active");
     document.getElementById("results").classList.remove("active");
@@ -386,14 +700,14 @@
       const res = await fetch("/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ senderName, senderCompany, targetAudience, offer, tone }),
+        body: JSON.stringify({ senderName, senderRole, targetRole, targetIndustry, offer, painPoint, cta }),
       });
 
       const data = await res.json();
-
       if (data.error) throw new Error(data.error);
 
-      renderResults(data.sequence);
+      _data = data;
+      renderAll(data);
     } catch (err) {
       document.getElementById("form-card").style.display = "block";
       errorEl.textContent = err.message || "Something went wrong. Try again.";
@@ -404,33 +718,7 @@
     }
   }
 
-  function renderResults(sequence) {
-    const list = document.getElementById("emailList");
-    list.innerHTML = "";
-
-    const labels = ["", "Hook", "Social Proof", "Handle Objection", "Case Study", "Breakup"];
-
-    sequence.forEach((email) => {
-      const card = document.createElement("div");
-      card.className = "email-card";
-      card.innerHTML = `
-        <div class="email-header">
-          <span class="email-num">Email ${email.number} — ${labels[email.number]}</span>
-          <button class="btn-copy" onclick="copyEmail(this, ${email.number})">Copy</button>
-        </div>
-        <div class="subject-line">Subject: <span>${escapeHtml(email.subject)}</span></div>
-        <div class="email-body" id="body-${email.number}">${escapeHtml(email.body)}</div>
-      `;
-      list.appendChild(card);
-    });
-
-    window._sequence = sequence;
-    document.getElementById("results").classList.add("active");
-  }
-
-  function copyEmail(btn, num) {
-    const email = window._sequence.find(e => e.number === num);
-    const text = `Subject: ${email.subject}\n\n${email.body}`;
+  function copyText(text, btn) {
     navigator.clipboard.writeText(text).then(() => {
       btn.textContent = "Copied!";
       btn.classList.add("copied");
@@ -441,14 +729,190 @@
     });
   }
 
+  /* ── Render all tabs ── */
+  function renderAll(data) {
+    renderEmails(data.email_sequence || []);
+    renderLinkedin(data.linkedin_messages || {});
+    renderTwitter(data.twitter_dms || []);
+    renderSubjects(data.subject_line_variations || []);
+    renderCalendar(data.outreach_calendar || []);
+    renderObjections(data.objection_responses || []);
+    renderStrategy(data.personalization_tips || [], data.follow_up_strategy || "");
+
+    // Reset to first tab
+    document.querySelectorAll(".tab-btn").forEach((b, i) => b.classList.toggle("active", i === 0));
+    document.querySelectorAll(".tab-panel").forEach((p, i) => p.classList.toggle("active", i === 0));
+
+    document.getElementById("results").classList.add("active");
+  }
+
+  /* ── Email Sequence ── */
+  function renderEmails(sequence) {
+    const list = document.getElementById("emailList");
+    list.innerHTML = "";
+    sequence.forEach((email, idx) => {
+      const card = document.createElement("div");
+      card.className = "out-card";
+      const id = "email-body-" + idx;
+      card.innerHTML = `
+        <div class="card-header">
+          <span class="badge">Day ${escapeHtml(String(email.day))}</span>
+          <button class="btn-copy" onclick="copyEmailCard(this, ${idx})">Copy</button>
+        </div>
+        <div class="field-label">Subject</div>
+        <div class="field-value subject-text">${escapeHtml(email.subject)}</div>
+        <hr class="divider">
+        <div class="field-label">Body</div>
+        <div class="field-value" id="${id}">${escapeHtml(email.body)}</div>
+        <div class="field-label">CTA</div>
+        <div class="field-value" style="color:#6366f1;font-weight:500;">${escapeHtml(email.cta)}</div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function copyEmailCard(btn, idx) {
+    const email = (_data.email_sequence || [])[idx];
+    if (!email) return;
+    const text = `Subject: ${email.subject}\n\n${email.body}\n\n${email.cta}`;
+    copyText(text, btn);
+  }
+
+  /* ── LinkedIn ── */
+  function renderLinkedin(msgs) {
+    const list = document.getElementById("linkedinList");
+    list.innerHTML = "";
+    const items = [
+      { label: "Connection Request", badge: "Step 1", key: "connection_request", color: "blue" },
+      { label: "Follow-up After Connecting", badge: "Step 2", key: "follow_up_1", color: "blue" },
+      { label: "Second Follow-up (No Reply)", badge: "Step 3", key: "follow_up_2", color: "blue" },
+    ];
+    items.forEach(item => {
+      const text = msgs[item.key] || "";
+      const card = document.createElement("div");
+      card.className = "out-card";
+      card.innerHTML = `
+        <div class="card-header">
+          <span class="badge ${item.color}">${item.badge} — ${item.label}</span>
+          <button class="btn-copy" onclick="copyText(${JSON.stringify(text)}, this)">Copy</button>
+        </div>
+        <div class="field-value">${escapeHtml(text)}</div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  /* ── Twitter DMs ── */
+  function renderTwitter(dms) {
+    const list = document.getElementById("twitterList");
+    list.innerHTML = "";
+    dms.forEach((dm, idx) => {
+      const card = document.createElement("div");
+      card.className = "out-card";
+      card.innerHTML = `
+        <div class="card-header">
+          <span class="badge green">Version ${idx + 1}</span>
+          <button class="btn-copy" onclick="copyText(${JSON.stringify(dm)}, this)">Copy</button>
+        </div>
+        <div class="field-value">${escapeHtml(dm)}</div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  /* ── Subject Lines ── */
+  function renderSubjects(subjects) {
+    const list = document.getElementById("subjectList");
+    list.innerHTML = "";
+    subjects.forEach((item, idx) => {
+      const card = document.createElement("div");
+      card.className = "out-card";
+      const copyStr = item.subject || "";
+      card.innerHTML = `
+        <div class="subject-row">
+          <div class="subject-num">${idx + 1}</div>
+          <div class="subject-content">
+            <div class="card-header" style="margin-bottom:8px;">
+              <div class="field-value subject-text" style="margin:0;">${escapeHtml(item.subject)}</div>
+              <button class="btn-copy" onclick="copyText(${JSON.stringify(copyStr)}, this)">Copy</button>
+            </div>
+            <div class="tip-box">${escapeHtml(item.open_rate_tip)}</div>
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  /* ── 30-Day Calendar ── */
+  function renderCalendar(days) {
+    const grid = document.getElementById("calendarGrid");
+    grid.innerHTML = "";
+    days.forEach(day => {
+      const channelClass = {
+        "Email": "channel-email",
+        "LinkedIn": "channel-linkedin",
+        "Twitter/X": "channel-twitter",
+        "Research": "channel-research",
+        "Rest": "channel-rest",
+      }[day.channel] || "channel-email";
+
+      const card = document.createElement("div");
+      card.className = "cal-card";
+      card.innerHTML = `
+        <div class="cal-day">Day ${escapeHtml(String(day.day))}</div>
+        <span class="cal-channel ${channelClass}">${escapeHtml(day.channel)}</span>
+        <div class="cal-action">${escapeHtml(day.action)}</div>
+        ${day.notes ? `<div class="cal-notes">${escapeHtml(day.notes)}</div>` : ""}
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  /* ── Objections ── */
+  function renderObjections(objections) {
+    const list = document.getElementById("objectionList");
+    list.innerHTML = "";
+    objections.forEach((obj, idx) => {
+      const card = document.createElement("div");
+      card.className = "out-card";
+      const copyStr = `Re: ${obj.objection}\n\n${obj.email_response}`;
+      card.innerHTML = `
+        <div class="card-header">
+          <span class="badge amber">Objection ${idx + 1}</span>
+          <button class="btn-copy" onclick="copyText(${JSON.stringify(copyStr)}, this)">Copy Response</button>
+        </div>
+        <div class="objection-text">"${escapeHtml(obj.objection)}"</div>
+        <hr class="divider">
+        <div class="field-label">Your Response</div>
+        <div class="field-value">${escapeHtml(obj.email_response)}</div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  /* ── Strategy ── */
+  function renderStrategy(tips, strategy) {
+    const panel = document.getElementById("strategyPanel");
+
+    let html = `<div class="card-title" style="margin-bottom:20px;">Personalization Tips</div>`;
+    html += `<ul class="tips-list">`;
+    tips.forEach((tip, idx) => {
+      html += `<li><span class="tip-num">${idx + 1}</span><span>${escapeHtml(tip)}</span></li>`;
+    });
+    html += `</ul>`;
+
+    html += `<div class="card-title" style="margin-bottom:16px;padding-top:24px;border-top:1px solid #1f1f1f;">Follow-up Strategy</div>`;
+    html += `<div class="strategy-body">${escapeHtml(strategy)}</div>`;
+
+    panel.innerHTML = html;
+  }
+
   function reset() {
     document.getElementById("results").classList.remove("active");
     document.getElementById("form-card").style.display = "block";
     document.getElementById("error").classList.remove("active");
-  }
-
-  function escapeHtml(str) {
-    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    _data = null;
   }
 </script>
 
